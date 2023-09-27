@@ -30,6 +30,8 @@ project-directory/
 ```
 Navigate to attack-workbench-frontend/singularity and review the README.md there to see how to build these images and run them locally.
 
+Once the three containers are running (MongoDB, RESTful API, and the Front End), navigate to `localhost:8080` to reach the workbench. 
+
 # ATT&CK Workbench Frontend
 
 The ATT&CK Workbench is an application allowing users to **explore**, **create**, **annotate**, and **share** extensions of the MITRE ATT&CK® knowledge base. 
