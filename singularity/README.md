@@ -1,4 +1,4 @@
-# Ssummary
+# Summary
 
 See the top-level README.md for information about the MITRE ATT&CK Workbench. This README.md focuses on the Singularity containerization of the MITRE ATT&CK workbench and provides scripts for building Singularity .sif images, running those images, and basic utilities for importing/exporting the locally running MongoDB instance contained in one of those images. 
 
