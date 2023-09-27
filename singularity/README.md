@@ -89,6 +89,8 @@ To run all components together, use the following command:
 ./run.sh all
 ```
 
+Open a browser and navigate to `localhost:8080` to reach the Workbench application. Any changes saved in the application will be saved locally on the container hosting system given that the MongoDB container uses a bounded volume on the host machine.
+
 Once executed, the script will keep running, and the containers will remain active in the background. Press any key to exit the script. Upon exiting, all the background processes started by the script will be terminated.
 
 ### Important Notes
