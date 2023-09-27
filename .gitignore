@@ -42,3 +42,8 @@ certs/
 app/documentation/
 app/dist/
 app/node_modules/
+
+# singularity
+*.sif
+
+/db-data
