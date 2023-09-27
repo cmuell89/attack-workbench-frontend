@@ -46,4 +46,5 @@ app/node_modules/
 # singularity
 *.sif
 
-/db-data
+attack-workspace/
+pids.txt

@@ -1,3 +1,35 @@
+# NOTES for MSU
+
+This is a forked repository of the MITRE ATT&CK Workbench Frontend. This repository contains some additional directories that enable Singularity support given that MSU cannot use Docker in its cloud systems.
+```
+
+attack-workbench-frontend/
+│
+├── singularity/ --> This should be your working directory for using these scripts.
+│   ├── build.sh --> script to build Singularity container images as .sif files.
+│   ├── run.sh --> script to run Singularity containers.
+│   ├── import_db.sh --> script to locally import a database instance (MongoDB).
+│   ├── export_db.sh -->  script to locally export a database instance (MongoDB).
+│   ├── mongodb.def --> the Singularity recipe for the MongoDB container.
+│   ├── workbench_frontend.def --> the Singularity recipe for the ATT&CK workbench container for the front end.
+│   └── workbench_rest_api.def.md --> the Singularity recipe for the ATT&CK workbench container for the RESTful API.
+│
+├── singularity-resources/
+│   ├── nginx/ --> Directory that contains NGINX configurations.
+│   ├── nginx-cache/ --> NGINX volume to allow for temp file creation to enable NGINX exeuction on Singularity (which is Read-Only filesystem).
+│   ├── nginx-pid/ --> NGINX volume to allow for temp file creation to enable NGINX exeuction on Singularity (which is Read-Only filesystem).
+│   └── rest-api/ --> Rest API configurations.
+```
+The building of these images needs to have the RESTful API repository pulled down locally next to the attack workbench repository:
+```
+project-directory/
+│
+├── attack-workbench-frontend/
+│
+└── attack-workbench-rest-api/
+```
+Navigate to attack-workbench-frontend/singularity and review the README.md there to see how to build these images and run them locally.
+
 # ATT&CK Workbench Frontend
 
 The ATT&CK Workbench is an application allowing users to **explore**, **create**, **annotate**, and **share** extensions of the MITRE ATT&CK® knowledge base. 
