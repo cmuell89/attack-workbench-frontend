@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: mongo
+
+%runscript
+    echo "Remove leftover socket file"
+    rm /tmp/*.sock
+
+    echo "Running mongo"
+    mongod

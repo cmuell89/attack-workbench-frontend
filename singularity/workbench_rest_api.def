@@ -1,0 +1,55 @@
+Bootstrap: docker
+From: node:18
+
+%setup
+    # Create app directory
+    mkdir -p $SINGULARITY_ROOTFS/usr/src/app
+
+    # Copy application source
+    cp -r ../../attack-workbench-rest-api/. $SINGULARITY_ROOTFS/usr/src/app
+
+    # copy the npm dependency files
+    cp ../../attack-workbench-rest-api/package.json $SINGULARITY_ROOTFS/usr/src/app
+    cp ../../attack-workbench-rest-api/package-lock.json $SINGULARITY_ROOTFS/usr/src/app
+
+%post
+    # Navigate to the temporary build directory
+    cd /usr/src/app
+
+    # Install app dependencies
+    npm install
+
+    # Build the bundle
+    npm ci --only=production
+
+    # clean up
+    apt-get autoremove -y
+    apt-get clean
+
+%environment
+    export DATABASE_URL=mongodb://localhost:27017/attack-workspace
+    export SERVICE_ACCOUNT_APIKEY_ENABLE=true
+    export JSON_CONFIG_PATH=./resources/rest-api-service-config.json
+    export WORKBENCH_HOST=http://localhost:3000
+    export WORKBENCH_AUTHN_SERVICE_NAME=collection-manager
+    export WORKBENCH_AUTHN_APIKEY=sample-key
+
+%labels
+    org.opencontainers.image.title="ATT&CK Workbench REST API Service" \
+    org.opencontainers.image.description="This Docker image contains the REST API service of the ATT&CK Workbench, an application for exploring, creating, annotating, and sharing extensions of the MITRE ATT&CK® knowledge base. The service handles the storage, querying, and editing of ATT&CK objects. The application is built on Node.js and Express.js, and is served by the built-in web server provided by Express.js." \
+    org.opencontainers.image.source="https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api" \
+    org.opencontainers.image.documentation="https://github.com/center-for-threat-informed-defense/attack-workbench-rest-api/README.md" \
+    org.opencontainers.image.url="https://ghcr.io/center-for-threat-informed-defense/attack-workbench-rest-api" \
+    org.opencontainers.image.vendor="The MITRE Corporation" \
+    org.opencontainers.image.licenses="Apache-2.0" \
+    org.opencontainers.image.authors="MITRE ATT&CK<attack@mitre.org>" \
+    maintainer="MITRE ATT&CK<attack@mitre.org>"
+
+%files
+    # If there are any additional files you need to copy into the image, list them here
+    # /path/on/host /path/in/container
+
+%runscript
+    cd /usr/src/app
+    export NG_CLI_ANALYTICS="false"
+    npm start

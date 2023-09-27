@@ -1,0 +1,61 @@
+Bootstrap: docker
+From: nginx
+
+%setup
+    # Create temporary build directories
+    mkdir -p  $SINGULARITY_ROOTFS/usr/src/
+
+    # Copy application source and docs into temporary build directories
+    cp -r ../app  $SINGULARITY_ROOTFS/usr/src/
+
+    # copy the npm dependency files
+    cp ../app/package.json  $SINGULARITY_ROOTFS/usr/src/
+    cp ../app/package-lock.json  $SINGULARITY_ROOTFS/usr/src/
+
+    # copy the docs--angullar looks
+    cp -r ../docs  $SINGULARITY_ROOTFS/usr/src/
+
+%post
+    # Install Node.js (Assuming that the base nginx image does not have Node.js)
+    apt-get update
+    apt-get install -y nodejs npm
+
+    # Navigate to the temporary build directory
+    cd /usr/src/app
+
+    # Install app dependencies
+    npm install
+
+    # Build the bundle and set CLI analystics to CI to avoid angular analytics prompts.
+    export NG_CLI_ANALYTICS="false"
+    npm run build-prod
+
+    # Remove the default nginx website
+    rm -rf /usr/share/nginx/html/*
+
+    # Copy the application bundles
+    cp -r /usr/src/app/dist/app/. /usr/share/nginx/html
+
+    # give proper ownership to nginx
+    # chown nginx:nginx /usr/share/nginx/html/
+    # chown nginx:nginx /usr/share/nginx/html/*
+
+    # Clean up Node.js installation (Optional, if you want to reduce image size)
+    apt-get autoremove -y
+    apt-get clean
+
+%labels
+    org.opencontainers.image.title "ATT&CK Workbench Frontend Service"
+    org.opencontainers.image.description "This Singularity image contains the frontend service of the ATT&CK Workbench..."
+    org.opencontainers.image.source "https://github.com/center-for-threat-informed-defense/attack-workbench-frontend"
+    org.opencontainers.image.documentation "https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/README.md"
+    org.opencontainers.image.url "https://ghcr.io/center-for-threat-informed-defense/attack-workbench-frontend"
+    org.opencontainers.image.vendor "The MITRE Corporation"
+    org.opencontainers.image.licenses "Apache-2.0"
+    org.opencontainers.image.authors "MITRE ATT&CK<attack@mitre.org>"
+    maintainer "MITRE ATT&CK<attack@mitre.org>"
+
+# %runscript
+#     cd /usr/src/app
+#     export NG_CLI_ANALYTICS="false"
+#     npm start
